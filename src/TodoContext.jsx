@@ -1,5 +1,5 @@
 // TodoContext.js
-import  { createContext, useContext, useState } from 'react';
+import { createContext, useContext, useEffect, useState } from 'react';
 
 const TodoContext = createContext();
 
@@ -8,14 +8,43 @@ export const useTodoContext = () => {
 };
 
 export function TodoProvider({ children }) {
-  const [todo, setTodo] = useState('');
+  const [todo, setTodo] = useState({
+    text: '',
+    time: '',
+    date: '',
+    status: false,
+  });
   const [todoList, setTodoList] = useState([]);
 
   const addTodo = (newTodo) => {
-    if (newTodo.trim() !== '') {
-      setTodoList([...todoList, newTodo]);
-      setTodo('');
+    if (newTodo.text.trim() !== '') {
+      const currentDate = new Date();
+      const formattedDate = currentDate.toLocaleDateString();
+      const formattedTime = currentDate.toLocaleTimeString();
+  
+      // Update values in todo
+      const updatedTodo = {
+        text: newTodo.text,
+        time: formattedTime,
+        date: formattedDate,
+        status: false,
+      };
+  
+      setTodoList([...todoList, updatedTodo]);
+  
+      // Reset the todo text
+      setTodo({
+        text: '',
+        status: false,
+      });
     }
+  };
+   
+  const handleInputChange = (e) => {
+    setTodo({
+      ...todo,
+      text: e.target.value,
+    });
   };
 
   const removeTodo = (index) => {
@@ -25,7 +54,7 @@ export function TodoProvider({ children }) {
   };
 
   return (
-    <TodoContext.Provider value={{ todo, setTodo, todoList, addTodo,removeTodo }}>
+    <TodoContext.Provider value={{ todo, setTodo, todoList, addTodo, removeTodo, handleInputChange }}>
       {children}
     </TodoContext.Provider>
   );

@@ -2,21 +2,19 @@
 import { useTodoContext } from '../TodoContext';
 
 function InputField() {
-  const { todo, setTodo, addTodo } = useTodoContext();
-
-  const handleInputChange = (e) => {
-    setTodo(e.target.value);
-  };
+  const { todo, addTodo, handleInputChange } = useTodoContext();
 
   return (
-    <div>
+    <div >
       <input
+      className='input'
         type="text"
+        name="text"
         placeholder="Enter a task"
-        value={todo}
+        value={todo.text} // Access the text property of todo
         onChange={handleInputChange}
       />
-      <button onClick={() => addTodo(todo)}>Add</button>
+      <button onClick={() => addTodo(todo)}>+</button>
     </div>
   );
 }

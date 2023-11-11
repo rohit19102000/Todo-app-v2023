@@ -1,20 +1,25 @@
-import { useTodoContext } from "../TodoContext";
+import { useTodoContext } from '../TodoContext';
 
-
-function TaskList() {
-  const { todoList,removeTodo } = useTodoContext();
+function TodoList() {
+  const { todoList, removeTodo } = useTodoContext();
 
   return (
-    <ol>
+    <div className='todoList'>
       {todoList.map((item, index) => (
-        <li key={index}>
-          {item}
-       
-          <button onClick={() => removeTodo(index)}>x</button>
-        </li>
+        <div key={index}  className='todoCard'>
+          <strong >{item.text}</strong>
+          <div className=' details'>
+
+          <p>{item.time}</p>
+          <p>{item.date}</p>
+          <h6>{item.status ? "Done" : "Incomplete"}</h6>
+          <button onClick={() => removeTodo(index)}>🗑</button>
+          </div>
+        </div>
       ))}
-    </ol>
+    </div>
   );
 }
 
-export default TaskList;
+export default TodoList;
+
