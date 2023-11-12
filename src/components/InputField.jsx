@@ -1,20 +1,26 @@
 
+
 import { useTodoContext } from '../TodoContext';
 
 function InputField() {
   const { todo, addTodo, handleInputChange } = useTodoContext();
 
+  
+  
+  
   return (
-    <div >
+    <div className='inputContainer'>
       <input
-      className='input'
-        type="text"
-        name="text"
-        placeholder="Enter a task"
-        value={todo.text} // Access the text property of todo
+        className='input'
+        type='text'
+        name='text'
+        placeholder='Enter a task'
+        value={todo.text}
         onChange={handleInputChange}
       />
-      <button onClick={() => addTodo(todo)}>+</button>
+      {todo.text.trim() !== '' || todo.editMode ? (
+        <button onClick={() => addTodo(todo)}>{todo.editMode ||  undefined ? '✍' : '+'}</button>
+      ) : null}
     </div>
   );
 }
