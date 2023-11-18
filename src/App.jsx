@@ -10,7 +10,7 @@ function App() {
     <TodoProvider>
       <div>
         <h1>Todo List</h1>
-        <h3>v2 started</h3>
+        <h3>v2 started| local storage implementation completed</h3>
         <InputField />
         <TodoList />
       </div>
