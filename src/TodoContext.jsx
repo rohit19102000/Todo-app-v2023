@@ -1,4 +1,4 @@
-// TodoContext.js
+
 import { createContext, useContext, useState } from 'react';
 
 const TodoContext = createContext();
@@ -14,87 +14,100 @@ export function TodoProvider({ children }) {
     date: '',
     status: false,
     editMode: false,
+    category: 'All', 
   });
   const [todoList, setTodoList] = useState([]);
   const [editIndex, setEditIndex] = useState(null);
-  const [isEditMode, setIsEditMode] = useState(false); 
+  const [idCounter, setIdCounter] = useState(1);
 
+  const addTodo = (newTodo) => {
+    if (newTodo.text.trim() !== '') {
+      const currentDate = new Date();
+      const formattedDate = currentDate.toLocaleDateString();
+      const formattedTime = currentDate.toLocaleTimeString();
 
-const addTodo = (newTodo) => {
-  if (newTodo.text.trim() !== '') {
-    const currentDate = new Date();
-    const formattedDate = currentDate.toLocaleDateString();
-    const formattedTime = currentDate.toLocaleTimeString();
-
-    // Update values in todo
-    const updatedTodo = {
-      text: newTodo.text,
-      time: formattedTime,
-      date: formattedDate,
-      status: false,
-      editMode: false,
-    };
-
-    if (todo.editMode) {
-      // If in edit mode, update the existing todo
-      const updatedTodoList = [...todoList];
-      updatedTodoList[editIndex] = updatedTodo;
-
-      setTodoList(updatedTodoList);
-
-      // Reset the todo text, editIndex, and switch back to "add" mode
-      setTodo({
-        text: '',
+      const updatedTodo = {
+        id: idCounter, 
+        text: newTodo.text,
+        time: formattedTime,
+        date: formattedDate,
         status: false,
-        editMode:false,
-      });
-      setEditIndex(null);
-    } else {
-      // If in add mode, add the new todo
-      setTodoList([...todoList, updatedTodo]);
+        editMode: false,
+        category: newTodo.category || 'All', 
+      };
 
-      // Reset the todo text
-      setTodo({
-        text: '',
-        status: false,
-        editMode:false,
-      });
+      setIdCounter(idCounter + 1); 
+      if (todo.editMode) {
+        const updatedTodoList = [...todoList];
+        updatedTodoList[editIndex] = updatedTodo;
 
+        setTodoList(updatedTodoList);
+
+        setTodo({
+          text: '',
+          status: false,
+          editMode: false,
+          category: 'All', 
+        });
+        setEditIndex(null);
+      } else {
+        setTodoList([...todoList, updatedTodo]);
+
+        setTodo({
+          text: '',
+          status: false,
+          editMode: false,
+          category: 'All',
+        });
+      }
     }
-  }
-};
-
-// ...
+  };
 
   const handleInputChange = (e) => {
     setTodo({
       ...todo,
-      text: e.target.value,
+      [e.target.name]: e.target.value,
     });
   };
 
-  const toggleStatus = (index) => {
+  const toggleStatus = (id) => {
     const updatedTodoList = [...todoList];
-    updatedTodoList[index].status = !updatedTodoList[index].status;
+    const index = updatedTodoList.findIndex((item) => item.id === id);
+    if (index !== -1) {
+      updatedTodoList[index].status = !updatedTodoList[index].status;
+      setTodoList(updatedTodoList);
+    }
+  };
+
+  const removeTodo = (id) => {
+    const updatedTodoList = todoList.filter((item) => item.id !== id);
     setTodoList(updatedTodoList);
   };
 
-  const removeTodo = (index) => {
-    const updatedTodoList = [...todoList];
-    updatedTodoList.splice(index, 1);
-    setTodoList(updatedTodoList);
+  const editTodo = (id) => {
+    const index = todoList.findIndex((item) => item.id === id);
+    if (index !== -1) {
+      setEditIndex(index);
+      setTodo({
+        ...todoList[index],
+        editMode: true,
+      });
+    }
   };
-  const editTodo = (index) => {
-    // Set the index to be edited, populate the input field with the current text, and switch to "update" mode
-    setEditIndex(index);
-    setTodo({
-      ...todoList[index],
-      editMode: true,
-    });
 
-  };
   return (
-    <TodoContext.Provider value={{ todo, setTodo, todoList, addTodo, removeTodo, handleInputChange ,toggleStatus ,editTodo}}>
+    <TodoContext.Provider
+      value={{
+        todo,
+        setTodo,
+        todoList,
+        addTodo,
+        removeTodo,
+        handleInputChange,
+        toggleStatus,
+        editTodo,
+      }}
+    >
       {children}
     </TodoContext.Provider>
   );
