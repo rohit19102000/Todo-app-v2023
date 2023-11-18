@@ -1,5 +1,5 @@
 
-import { createContext, useContext, useState } from 'react';
+import  { createContext, useContext, useEffect, useState } from 'react';
 
 const TodoContext = createContext();
 
@@ -8,17 +8,29 @@ export const useTodoContext = () => {
 };
 
 export function TodoProvider({ children }) {
+  const storedTodoList = JSON.parse(localStorage.getItem('todoList')) || [];
+  const storedIdCounter = JSON.parse(localStorage.getItem('idCounter')) || 1;
+
   const [todo, setTodo] = useState({
     text: '',
     time: '',
     date: '',
     status: false,
     editMode: false,
-    category: 'All', 
+    category: 'All',
   });
-  const [todoList, setTodoList] = useState([]);
+
+  const [todoList, setTodoList] = useState(storedTodoList);
   const [editIndex, setEditIndex] = useState(null);
-  const [idCounter, setIdCounter] = useState(1);
+  const [idCounter, setIdCounter] = useState(storedIdCounter);
+
+  useEffect(() => {
+    localStorage.setItem('todoList', JSON.stringify(todoList));
+  }, [todoList]);
+
+  useEffect(() => {
+    localStorage.setItem('idCounter', JSON.stringify(idCounter));
+  }, [idCounter]);
 
   const addTodo = (newTodo) => {
     if (newTodo.text.trim() !== '') {
@@ -27,16 +39,16 @@ export function TodoProvider({ children }) {
       const formattedTime = currentDate.toLocaleTimeString();
 
       const updatedTodo = {
-        id: idCounter, 
+        id: idCounter,
         text: newTodo.text,
         time: formattedTime,
         date: formattedDate,
         status: false,
         editMode: false,
-        category: newTodo.category || 'All', 
+        category: newTodo.category || 'All',
       };
 
-      setIdCounter(idCounter + 1); 
+      setIdCounter(idCounter + 1);
       if (todo.editMode) {
         const updatedTodoList = [...todoList];
         updatedTodoList[editIndex] = updatedTodo;
@@ -47,7 +59,7 @@ export function TodoProvider({ children }) {
           text: '',
           status: false,
           editMode: false,
-          category: 'All', 
+          category: 'All',
         });
         setEditIndex(null);
       } else {
