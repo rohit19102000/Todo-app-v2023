@@ -21,7 +21,6 @@ export function TodoProvider({ children }) {
   });
 
   const [todoList, setTodoList] = useState(storedTodoList);
-  const [editIndex, setEditIndex] = useState(null);
   const [idCounter, setIdCounter] = useState(storedIdCounter);
 
   useEffect(() => {
@@ -31,6 +30,7 @@ export function TodoProvider({ children }) {
   useEffect(() => {
     localStorage.setItem('idCounter', JSON.stringify(idCounter));
   }, [idCounter]);
+
 
   const addTodo = (newTodo) => {
     if (newTodo.text.trim() !== '') {
@@ -49,29 +49,19 @@ export function TodoProvider({ children }) {
       };
 
       setIdCounter(idCounter + 1);
-      if (todo.editMode) {
-        const updatedTodoList = [...todoList];
-        updatedTodoList[editIndex] = updatedTodo;
 
-        setTodoList(updatedTodoList);
+      const updatedTodoList = todo.editMode
+        ? todoList.map((item) => (item.id === todo.id ? updatedTodo : item))
+        : [...todoList, updatedTodo];
 
-        setTodo({
-          text: '',
-          status: false,
-          editMode: false,
-          category: 'All',
-        });
-        setEditIndex(null);
-      } else {
-        setTodoList([...todoList, updatedTodo]);
+      setTodoList(updatedTodoList);
 
-        setTodo({
-          text: '',
-          status: false,
-          editMode: false,
-          category: 'All',
-        });
-      }
+      setTodo({
+        text: '',
+        status: false,
+        editMode: false,
+        category: 'All',
+      });
     }
   };
 
@@ -84,29 +74,29 @@ export function TodoProvider({ children }) {
 
   const toggleStatus = (id) => {
     const updatedTodoList = [...todoList];
-    const index = updatedTodoList.findIndex((item) => item.id === id);
-    if (index !== -1) {
-      updatedTodoList[index].status = !updatedTodoList[index].status;
+    const todoToUpdate = updatedTodoList.find((todo) => todo.id === id);
+  
+    if (todoToUpdate) {
+      todoToUpdate.status = !todoToUpdate.status;
       setTodoList(updatedTodoList);
     }
   };
 
+
   const removeTodo = (id) => {
-    const updatedTodoList = todoList.filter((item) => item.id !== id);
+    const updatedTodoList = todoList.filter((todo) => todo.id !== id);
     setTodoList(updatedTodoList);
   };
 
   const editTodo = (id) => {
-    const index = todoList.findIndex((item) => item.id === id);
-    if (index !== -1) {
-      setEditIndex(index);
+    const todoToEdit = todoList.find((todo) => todo.id === id);
+    if (todoToEdit) {
       setTodo({
-        ...todoList[index],
+        ...todoToEdit,
         editMode: true,
       });
     }
   };
-
   return (
     <TodoContext.Provider
       value={{
