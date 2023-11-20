@@ -15,7 +15,8 @@ function TodoList() {
   return (
     <div className='todoList'>
       {filteredTodoList.map((item) => (
-        <div key={item.id} className='todoCard'>
+        <div key={item.id} className='todoCard' 
+        style={{ border: `2px solid ${item.status ? '#5de800' : '#ffbf00'}` }}>
           <strong>{item.text}</strong>
           <p style={{ fontSize: '.5rem' }}>{item.status === true ? 'done' : 'pending'}</p>
           <div className='details'>
@@ -25,7 +26,12 @@ function TodoList() {
             <button style={{ fontSize: '1.5rem', padding: '5px' }} onClick={() => editTodo(item.id)}>
               ✍
             </button>
-            <button onClick={() => toggleStatus(item.id)}>{item.status ? 'Done' : 'Pending'}</button>
+            
+          <button 
+                  onClick={() => toggleStatus(item.id)}
+        >
+    {item.status ? 'X' : '✔'}
+  </button>
             <button onClick={() => removeTodo(item.id)}>🗑</button>
           </div>
         </div>

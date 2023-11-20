@@ -25,7 +25,10 @@
 
 }
 .todoCard {
-  border: 1px solid #ccc;
+
+  border:2px solid #ffbf00; 
+  
+
   padding: 1rem;
   margin: 0.5rem 0;
   width: 100%;
@@ -34,7 +37,11 @@
   align-items: center;
   justify-content: space-around;
   font-size: 30px;
-
+  border-radius: 25px;
+  -webkit-border-radius: 25px;
+  -moz-border-radius: 25px;
+  -ms-border-radius: 25px;
+  -o-border-radius: 25px;
 }
 .inputContainer{
   margin-bottom: 5rem;
@@ -54,9 +61,3 @@
 .todoCard strong{
   width: 70%;
 }
-/* 
-.jcc {
-  display: flex;
-  justify-content: space-around;
-  align-items: center;
-} */
