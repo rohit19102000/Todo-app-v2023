@@ -6,7 +6,13 @@
   
 }
 
-
+body {
+  margin: 0;
+  display: flex;
+  place-items: center;
+  min-width: 320px;
+  min-height: 100vh;
+}
 
 .todoList {
   display: flex;
@@ -26,7 +32,7 @@
 }
 .todoCard {
 
-  border:2px solid #ffbf00; 
+
   
 
   padding: 1rem;
@@ -60,4 +66,43 @@
 }
 .todoCard strong{
   width: 70%;
+}
+button {
+  border-radius: 8px;
+  border: 1px solid transparent;
+  padding: 0.6em 1.2em;
+  font-size: 1em;
+  font-weight: 500;
+  font-family: inherit;
+  background-color: #1a1a1a;
+  cursor: pointer;
+  transition: border-color 0.25s;
+  -webkit-transition: border-color 0.25s;
+  -moz-transition: border-color 0.25s;
+  -ms-transition: border-color 0.25s;
+  -o-transition: border-color 0.25s;
+}
+button:hover{
+  scale: 1.1;
+}
+.btnA:hover{
+  background-color:#ffbf00;
+  color:#1a1a1a ;
+
+}.btnB:hover{
+  background-color:#5de800;
+  color: #1a1a1a;
+}
+.edit:hover{
+  background-color: rgb(181, 181, 39);
+  color: #1a1a1a;
+}
+.delete:hover{
+  background-color: #FF0800;
+}
+.status-done{
+  color:#5de800;
+}
+.status-pending{
+  color:#ffbf00;
 }
