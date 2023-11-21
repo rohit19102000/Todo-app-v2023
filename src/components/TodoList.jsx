@@ -1,7 +1,7 @@
 import { useTodoContext } from '../TodoContext';
 
 function TodoList() {
-  const { todoList, removeTodo, toggleStatus, editTodo } = useTodoContext();
+  const { todoList, removeTodo, toggleStatus, editTodo,handleInputChange } = useTodoContext();
   const { todo } = useTodoContext();
 
   const filteredTodoList = todoList.filter((item) => {
@@ -14,28 +14,37 @@ function TodoList() {
 
   return (
     <div className='todoList'>
-         {filteredTodoList.length > 0 ? (
-        <h3 className={todo.category === 'Done' && 'status-done' || todo.category === 'Pending'&&  'status-pending'}>
-          {todo.category === 'Done' && 'status-done' || todo.category === 'Pending'&&  'status-pending'}
-        </h3>
-      ) : null}
+      
+      <select style={{padding:"10px", marginRight:"50px", marginBottom:"50px" ,borderRadius:"5px"}}
+        className='categorySelect'
+        name='category'
+        value={todo.category}
+        onChange={(e) => handleInputChange({ target: { name: 'category', value: e.target.value } })}
+      >
+        <option value='All'>All</option>
+        <option value='Done'>Done</option>
+        <option value='Pending'>Pending</option>
+      </select>
+
       {filteredTodoList.map((item) => (
         
         <div key={item.id} className='todoCard' 
         style={{marginBottom :"30px", border: `2px solid ${item.status ? '#5de800' : '#ffbf00'}` }}>
           <strong className={item.status ?"status-done":"status-pending" }>{item.text}</strong>
+          <div className='details displayNone'>
           <p style={{ fontSize: '.5rem' }}>{item.status === true ? 'done' : 'pending'}</p>
-          <div className='details'>
-            <p>{item.time}</p>
+            <p >{item.time}</p>
             <p>{item.date}</p>
             <h6></h6>
-            <button className='edit' style={{ fontSize: '1.5rem', padding: '5px' }} onClick={() => editTodo(item.id)}>
+            </div>
+            <div className="buttons">
+            <button className='edit'  onClick={() => editTodo(item.id)}>
               ✍
             </button>
             
           <button  className={item.status ? "btnA":"btnB"}
                   onClick={() => toggleStatus(item.id)}
-        >
+                  >
     {item.status ? 'X' : '✔'}
   </button>
             <button className='delete' onClick={() => removeTodo(item.id)}>🗑</button>

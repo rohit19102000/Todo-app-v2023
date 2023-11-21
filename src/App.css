@@ -68,7 +68,7 @@ body {
   width: 70%;
 }
 .todoCard:hover{
-  scale: 1.1;
+  scale: 1.02;
 }
 button {
   border-radius: 8px;
@@ -114,4 +114,64 @@ button:hover{
 }
 .status-pending{
   color:#ffbf00;
+}
+.buttons{
+display: flex;
+justify-content: space-around;
+align-items: center;
+width: 250px;
+/* background-color: #fff; */
+}
+.buttons button{
+  font-size: 1.5rem;
+  padding: 10px;
+  font-weight: bolder;
+}
+
+@media only screen and (max-width: 767px) {
+  .displayNone {
+    display: none !important; 
+
+  }
+
+  .buttons{
+    width: 150px;
+    
+    }
+    .buttons button{
+      font-size: 1rem;
+      padding: 5px;
+      margin-top: 10px;
+      font-weight: bolder;
+    }
+    .todoCard{
+      display: flex;
+      flex-direction: column;
+      position: relative;
+      font-size: 3.5vw;
+    }
+}
+
+@media only screen and (min-width: 768px) and (max-width: 1024px) {
+  .displayNone {
+    display: none !important; 
+
+  }
+
+  .buttons{
+    width: 150px;
+    
+    }
+    .buttons button{
+      font-size: 1rem;
+      padding: 5px;
+      margin-top: 10px;
+      font-weight: bolder;
+    }
+    .todoCard{
+      display: flex;
+      flex-direction: column;
+      position: relative;
+      font-size: 3.5vw;
+    }
 }
