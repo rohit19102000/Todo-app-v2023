@@ -67,6 +67,9 @@ body {
 .todoCard strong{
   width: 70%;
 }
+.todoCard:hover{
+  scale: 1.1;
+}
 button {
   border-radius: 8px;
   border: 1px solid transparent;
@@ -102,6 +105,12 @@ button:hover{
 }
 .status-done{
   color:#5de800;
+}
+.status-done:hover{
+  scale: 1.2;
+}
+.status-pending:hover{
+  scale: 1.2;
 }
 .status-pending{
   color:#ffbf00;

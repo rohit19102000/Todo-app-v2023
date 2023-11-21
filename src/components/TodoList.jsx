@@ -15,14 +15,14 @@ function TodoList() {
   return (
     <div className='todoList'>
          {filteredTodoList.length > 0 ? (
-        <h3 className={todo.category === 'Done' ? 'status-done' : 'status-pending'}>
-          {todo.category === 'Done' ? 'Completed Tasks' : 'Pending Tasks'}
+        <h3 className={todo.category === 'Done' && 'status-done' || todo.category === 'Pending'&&  'status-pending'}>
+          {todo.category === 'Done' && 'status-done' || todo.category === 'Pending'&&  'status-pending'}
         </h3>
       ) : null}
       {filteredTodoList.map((item) => (
         
         <div key={item.id} className='todoCard' 
-        style={{ border: `2px solid ${item.status ? '#5de800' : '#ffbf00'}` }}>
+        style={{marginBottom :"30px", border: `2px solid ${item.status ? '#5de800' : '#ffbf00'}` }}>
           <strong className={item.status ?"status-done":"status-pending" }>{item.text}</strong>
           <p style={{ fontSize: '.5rem' }}>{item.status === true ? 'done' : 'pending'}</p>
           <div className='details'>
