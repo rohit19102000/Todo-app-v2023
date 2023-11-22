@@ -9,7 +9,7 @@
 body {
   margin: 0;
   display: flex;
-  place-items: center;
+  /* place-items: center; */
   min-width: 320px;
   min-height: 100vh;
 }
@@ -31,10 +31,6 @@ body {
 
 }
 .todoCard {
-
-
-  
-
   padding: 1rem;
   margin: 0.5rem 0;
   width: 100%;
@@ -44,10 +40,10 @@ body {
   justify-content: space-around;
   font-size: 30px;
   border-radius: 25px;
-  -webkit-border-radius: 25px;
-  -moz-border-radius: 25px;
-  -ms-border-radius: 25px;
-  -o-border-radius: 25px;
+  -webkit-border-radius:;
+  -moz-border-radius:;
+  -ms-border-radius:;
+  -o-border-radius:;
 }
 .inputContainer{
   margin-bottom: 5rem;
@@ -57,11 +53,11 @@ body {
   padding: 15px;
   width: 35vw;
   border-color: rgb(3, 138, 206);
-  -webkit-border-radius: 50px;
+  -webkit-border-radius:;
   border-width:3.5px ;
-  -moz-border-radius: 50px;
-  -ms-border-radius: 50px;
-  -o-border-radius: 50px;
+  -moz-border-radius:;
+  -ms-border-radius:;
+  -o-border-radius:;
   margin-right: 15px;
 }
 .todoCard strong{
@@ -84,6 +80,10 @@ button {
   -moz-transition: border-color 0.25s;
   -ms-transition: border-color 0.25s;
   -o-transition: border-color 0.25s;
+  -webkit-border-radius:;
+  -moz-border-radius:;
+  -ms-border-radius:;
+  -o-border-radius:;
 }
 button:hover{
   scale: 1.1;
@@ -120,7 +120,6 @@ display: flex;
 justify-content: space-around;
 align-items: center;
 width: 250px;
-/* background-color: #fff; */
 }
 .buttons button{
   font-size: 1.5rem;
@@ -174,4 +173,41 @@ width: 250px;
       position: relative;
       font-size: 3.5vw;
     }
+}
+
+
+
+.navbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1rem;
+  background-color: #333; 
+  color: #fff; 
+}
+
+.navbar-left h1 {
+  margin: 0;
+  font-size: 20px;
+}
+
+.navbar-right {
+  display: flex;
+  align-items: center;
+}
+
+.navbar-right button {
+  margin-left: 1rem;
+  padding: 0.5rem 1rem;
+  border-radius: 5px;
+  background-color: #1a1a1a;
+  border: none;
+  -webkit-border-radius: 5px;
+  -moz-border-radius: 5px;
+  -ms-border-radius: 5px;
+  -o-border-radius: 5px;
+}
+
+.navbar-right button:hover {
+  background-color: #555; 
 }
