@@ -1,13 +1,13 @@
 
-import { useEffect, useState } from 'react';
 import './App.css';
 import InputField from './components/InputField';
 import NavBar from './components/NavBar';
 import TodoList from './components/TodoList';
+import UserName from './components/UserName';
 
 import { TodoProvider } from './TodoContext';
-import { auth } from './config/firebase';
-import UserName from './components/UserName';
+
+
 
 
 function App() {
@@ -15,13 +15,13 @@ function App() {
   return (
     <TodoProvider>
 
-      <div>
+      {/* <div> */}
       <NavBar  />
 
       <UserName/>
         <InputField />
         <TodoList />
-      </div>
+      {/* </div> */}
     </TodoProvider>
   );
 }
