@@ -6,6 +6,8 @@ import NavBar from './components/NavBar';
 import TodoList from './components/TodoList';
 
 import { TodoProvider } from './TodoContext';
+import { auth } from './config/firebase';
+import UserName from './components/UserName';
 
 
 function App() {
@@ -15,7 +17,8 @@ function App() {
 
       <div>
       <NavBar  />
-        <h3>v3 started| firebase auth implementation</h3>
+
+      <UserName/>
         <InputField />
         <TodoList />
       </div>
