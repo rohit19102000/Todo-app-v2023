@@ -15,13 +15,11 @@ function App() {
   return (
     <TodoProvider>
 
-      {/* <div> */}
       <NavBar  />
 
       <UserName/>
         <InputField />
         <TodoList />
-      {/* </div> */}
     </TodoProvider>
   );
 }
