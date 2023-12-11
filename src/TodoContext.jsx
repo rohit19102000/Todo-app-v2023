@@ -1,6 +1,6 @@
-import { createContext, useContext, useState } from 'react';
+import { createContext, useContext, useEffect, useState } from 'react';
 import { addDoc, collection, deleteDoc, doc, getDocs, updateDoc } from 'firebase/firestore';
-import { db } from './config/firebase'; 
+import { db,auth } from './config/firebase';
 
 const TodoContext = createContext();
 
@@ -14,25 +14,36 @@ export function TodoProvider({ children }) {
     status: false,
     editMode: false,
     category: 'All',
+    userUID: null,
   });
-
+  
   const [todoList, setTodoList] = useState([]);
 
   const todosCollection = collection(db, 'todos');
 
+  useEffect(() => {
+    const unsubscribe = auth.onAuthStateChanged((user) => {
+      if (user) {
+        setTodo((prevTodo) => ({ ...prevTodo, userUID: user.uid }));
+      }
+    });
+
+    return () => unsubscribe();
+  }, []);
+  
   const fetchTodos = async () => {
     const querySnapshot = await getDocs(todosCollection);
     console.log("hello")
     const todos = querySnapshot.docs.map((doc) => ({ id: doc.id, ...doc.data() }));
     setTodoList(todos);
   };
-
+  
   const addTodo = async (newTodo) => {
     if (newTodo.text.trim() !== '') {
       const currentDate = new Date();
       const formattedDate = currentDate.toLocaleDateString();
       const formattedTime = currentDate.toLocaleTimeString();
-
+      
       const updatedTodo = {
         text: newTodo.text,
         time: formattedTime,
@@ -40,20 +51,22 @@ export function TodoProvider({ children }) {
         status: false,
         editMode: false,
         category: newTodo.category || 'All',
+        userUID: todo.userUID,
       };
-
+      
       if (todo.editMode) {
         await updateDoc(doc(db, 'todos', `${todo.id}`), updatedTodo);
       } else {
         await addDoc(todosCollection, updatedTodo);
       }
-
+      
       fetchTodos(); 
       setTodo({
         text: '',
         status: false,
         editMode: false,
         category: 'All',
+        userUID: todo.userUID,
       });
     }
   };
