@@ -108,6 +108,7 @@ export function TodoProvider({ children }) {
         handleInputChange,
         toggleStatus,
         editTodo,
+      
       }}
     >
       {children}

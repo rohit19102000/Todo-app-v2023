@@ -1,19 +1,27 @@
 
 import './App.css';
 import InputField from './components/InputField';
+import NavBar from './components/NavBar';
 import TodoList from './components/TodoList';
+import UserName from './components/UserName';
 
 import { TodoProvider } from './TodoContext';
 
+
+
+
 function App() {
+
   return (
     <TodoProvider>
-      <div>
-        <h1>Todo List</h1>
-        <h3>v2 started| local storage implementation completed</h3>
+
+      {/* <div> */}
+      <NavBar  />
+
+      <UserName/>
         <InputField />
         <TodoList />
-      </div>
+      {/* </div> */}
     </TodoProvider>
   );
 }
