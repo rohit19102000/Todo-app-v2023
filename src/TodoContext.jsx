@@ -8,6 +8,7 @@ export const useTodoContext = () => {
   return useContext(TodoContext);
 };
 
+
 export function TodoProvider({ children }) {
   const [todo, setTodo] = useState({
     text: '',
@@ -22,9 +23,10 @@ export function TodoProvider({ children }) {
   const todosCollection = collection(db, 'todos');
 
   useEffect(() => {
-    const unsubscribe = auth.onAuthStateChanged((user) => {
+    const unsubscribe = auth.onAuthStateChanged(async (user) => {
       if (user) {
         setTodo((prevTodo) => ({ ...prevTodo, userUID: user.uid }));
+        await fetchTodos();
       }
     });
 
@@ -33,10 +35,10 @@ export function TodoProvider({ children }) {
   
   const fetchTodos = async () => {
     const querySnapshot = await getDocs(todosCollection);
-    console.log("hello")
     const todos = querySnapshot.docs.map((doc) => ({ id: doc.id, ...doc.data() }));
     setTodoList(todos);
   };
+
   
   const addTodo = async (newTodo) => {
     if (newTodo.text.trim() !== '') {
