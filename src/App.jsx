@@ -36,7 +36,7 @@ function App() {
         </>
       ) :
       <h1>
-        please log in to continue
+        please sign in to continue
       </h1>
       }
     </TodoProvider>

@@ -22,6 +22,7 @@ export function TodoProvider({ children }) {
 
   const todosCollection = collection(db, 'todos');
 
+
   useEffect(() => {
     const unsubscribe = auth.onAuthStateChanged(async (user) => {
       if (user) {
@@ -97,7 +98,7 @@ export function TodoProvider({ children }) {
       });
     }
   };
-
+  
   const handleInputChange = (e) => {
     setTodo({
       ...todo,
