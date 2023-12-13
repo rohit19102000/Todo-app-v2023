@@ -16,7 +16,7 @@ function TodoList() {
   function getCategoryMessage(category) {
     if (category === 'All') {
       return 'Your to-do list is empty.';
-    } else {
+    } else if( todoList.length >=1 && category !== 'All') {
       return `you dont  have any todos in ${category} category`;
     }
   }
