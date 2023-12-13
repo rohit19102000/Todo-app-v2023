@@ -1,5 +1,131 @@
+// import { createContext, useContext, useEffect, useState } from 'react';
+// import { addDoc, collection, deleteDoc, doc, getDocs, updateDoc } from 'firebase/firestore';
+// import { db,auth } from './config/firebase';
 
-import  { createContext, useContext, useEffect, useState } from 'react';
+// const TodoContext = createContext();
+
+// export const useTodoContext = () => {
+//   return useContext(TodoContext);
+// };
+
+
+// export function TodoProvider({ children }) {
+//   const [todo, setTodo] = useState({
+//     text: '',
+//     status: false,
+//     editMode: false,
+//     category: 'All',
+//     userUID: null,
+//   });
+  
+//   const [todoList, setTodoList] = useState([]);
+
+//   const todosCollection = collection(db, 'todos');
+
+
+//   useEffect(() => {
+//     const unsubscribe = auth.onAuthStateChanged(async (user) => {
+//       if (user) {
+//         setTodo((prevTodo) => ({ ...prevTodo, userUID: user.uid }));
+//         await fetchTodos();
+//       }
+//     });
+
+//     return () => unsubscribe();
+//   }, []);
+  
+//   const fetchTodos = async () => {
+//     const querySnapshot = await getDocs(todosCollection);
+//     const todos = querySnapshot.docs.map((doc) => ({ id: doc.id, ...doc.data() }));
+//     setTodoList(todos);
+//   };
+
+  
+//   const addTodo = async (newTodo) => {
+//     if (newTodo.text.trim() !== '') {
+//       const currentDate = new Date();
+//       const formattedDate = currentDate.toLocaleDateString();
+//       const formattedTime = currentDate.toLocaleTimeString();
+      
+//       const updatedTodo = {
+//         text: newTodo.text,
+//         time: formattedTime,
+//         date: formattedDate,
+//         status: false,
+//         editMode: false,
+//         category: newTodo.category || 'All',
+//         userUID: todo.userUID,
+//       };
+      
+//       if (todo.editMode) {
+//         await updateDoc(doc(db, 'todos', `${todo.id}`), updatedTodo);
+//       } else {
+//         await addDoc(todosCollection, updatedTodo);
+//       }
+      
+//       fetchTodos(); 
+//       setTodo({
+//         text: '',
+//         status: false,
+//         editMode: false,
+//         category: 'All',
+//         userUID: todo.userUID,
+//       });
+//     }
+//   };
+
+//   const removeTodo = async (id) => {
+//     await deleteDoc(doc(db, 'todos', `${id}`));
+//     fetchTodos(); 
+//   };
+
+//   const toggleStatus = async (id) => {
+//     const todoToUpdate = todoList.find((todo) => todo.id === id);
+
+//     if (todoToUpdate) {
+//       const updatedStatus = !todoToUpdate.status;
+//       await updateDoc(doc(db, 'todos', `${id}`), { status: updatedStatus });
+//       fetchTodos(); 
+//     }
+//   };
+
+//   const editTodo = (id) => {
+//     const todoToEdit = todoList.find((todo) => todo.id === id);
+//     if (todoToEdit) {
+//       setTodo({
+//         ...todoToEdit,
+//         editMode: true,
+//       });
+//     }
+//   };
+  
+//   const handleInputChange = (e) => {
+//     setTodo({
+//       ...todo,
+//       [e.target.name]: e.target.value,
+//     });
+//   };
+
+//   return (
+//     <TodoContext.Provider
+//       value={{
+//         todo,
+//         setTodo,
+//         todoList,
+//         addTodo,
+//         removeTodo,
+//         toggleStatus,
+//         editTodo,
+//         handleInputChange,
+//       }}
+//     >
+//       {children}
+//     </TodoContext.Provider>
+//   );
+// }
+import { createContext, useContext, useEffect, useState } from 'react';
+import { addDoc, collection, deleteDoc, doc, getDocs, updateDoc, onSnapshot } from 'firebase/firestore';
+import { db, auth } from './config/firebase';
 
 const TodoContext = createContext();
 
@@ -8,84 +134,105 @@ export const useTodoContext = () => {
 };
 
 export function TodoProvider({ children }) {
-  const storedTodoList = JSON.parse(localStorage.getItem('todoList')) || [];
-  const storedIdCounter = JSON.parse(localStorage.getItem('idCounter')) || 1;
-
   const [todo, setTodo] = useState({
     text: '',
-    time: '',
-    date: '',
     status: false,
     editMode: false,
     category: 'All',
+    userUID: null,
   });
 
-  const [todoList, setTodoList] = useState(storedTodoList);
-  const [idCounter, setIdCounter] = useState(storedIdCounter);
+  const [todoList, setTodoList] = useState([]);
+  const [userTodoCollection, setUserTodoCollection] = useState(null);
 
   useEffect(() => {
-    localStorage.setItem('todoList', JSON.stringify(todoList));
-  }, [todoList]);
+    let unsubscribeAuth = () => {};
+    let unsubscribeTodo = () => {};
 
-  useEffect(() => {
-    localStorage.setItem('idCounter', JSON.stringify(idCounter));
-  }, [idCounter]);
+    const setupCollection = async (user) => {
+      const userCollectionName = `todo_${user.uid}`;
+      const collectionRef = collection(db, userCollectionName);
+      setUserTodoCollection(collectionRef);
 
+      unsubscribeTodo(); // Unsubscribe from the previous listener
 
-  const addTodo = (newTodo) => {
-    if (newTodo.text.trim() !== '') {
+      unsubscribeTodo = onSnapshot(collectionRef, (querySnapshot) => {
+        const todos = querySnapshot.docs.map((doc) => ({ id: doc.id, ...doc.data() }));
+        setTodoList(todos);
+      });
+    };
+
+    unsubscribeAuth = auth.onAuthStateChanged(async (user) => {
+      if (user) {
+        setTodo((prevTodo) => ({ ...prevTodo, userUID: user.uid }));
+        await setupCollection(user);
+      }
+    });
+
+    return () => {
+      unsubscribeAuth(); // Unsubscribe from the auth listener
+      unsubscribeTodo(); // Unsubscribe from the todo listener
+    };
+  }, []); // No dependencies to ensure it only runs once
+
+  const fetchTodos = async () => {
+    if (userTodoCollection) {
+      const querySnapshot = await getDocs(userTodoCollection);
+      const todos = querySnapshot.docs.map((doc) => ({ id: doc.id, ...doc.data() }));
+      setTodoList(todos);
+    }
+  };
+
+  const addTodo = async (newTodo) => {
+    if (newTodo.text.trim() !== '' && userTodoCollection) {
       const currentDate = new Date();
       const formattedDate = currentDate.toLocaleDateString();
       const formattedTime = currentDate.toLocaleTimeString();
 
       const updatedTodo = {
-        id: idCounter,
         text: newTodo.text,
         time: formattedTime,
         date: formattedDate,
         status: false,
         editMode: false,
         category: newTodo.category || 'All',
+        userUID: todo.userUID,
       };
 
-      setIdCounter(idCounter + 1);
+      if (todo.editMode) {
+        await updateDoc(doc(userTodoCollection, `${todo.id}`), updatedTodo);
+      } else {
+        await addDoc(userTodoCollection, updatedTodo);
+      }
 
-      const updatedTodoList = todo.editMode
-        ? todoList.map((item) => (item.id === todo.id ? updatedTodo : item))
-        : [...todoList, updatedTodo];
-
-      setTodoList(updatedTodoList);
-
+      fetchTodos();
       setTodo({
         text: '',
         status: false,
         editMode: false,
         category: 'All',
+        userUID: todo.userUID,
       });
     }
   };
 
-  const handleInputChange = (e) => {
-    setTodo({
-      ...todo,
-      [e.target.name]: e.target.value,
-    });
-  };
-
-  const toggleStatus = (id) => {
-    const updatedTodoList = [...todoList];
-    const todoToUpdate = updatedTodoList.find((todo) => todo.id === id);
-  
-    if (todoToUpdate) {
-      todoToUpdate.status = !todoToUpdate.status;
-      setTodoList(updatedTodoList);
+  const removeTodo = async (id) => {
+    if (userTodoCollection) {
+      await deleteDoc(doc(userTodoCollection, `${id}`));
+      fetchTodos();
     }
   };
 
+  const toggleStatus = async (id) => {
+    if (userTodoCollection) {
+      const todoToUpdate = todoList.find((todo) => todo.id === id);
 
-  const removeTodo = (id) => {
-    const updatedTodoList = todoList.filter((todo) => todo.id !== id);
-    setTodoList(updatedTodoList);
+      if (todoToUpdate) {
+        const updatedStatus = !todoToUpdate.status;
+        await updateDoc(doc(userTodoCollection, `${id}`), { status: updatedStatus });
+        fetchTodos();
+      }
+    }
   };
 
   const editTodo = (id) => {
@@ -97,6 +244,14 @@ export function TodoProvider({ children }) {
       });
     }
   };
+
+  const handleInputChange = (e) => {
+    setTodo({
+      ...todo,
+      [e.target.name]: e.target.value,
+    });
+  };
+
   return (
     <TodoContext.Provider
       value={{
@@ -105,10 +260,9 @@ export function TodoProvider({ children }) {
         todoList,
         addTodo,
         removeTodo,
-        handleInputChange,
         toggleStatus,
         editTodo,
-      
+        handleInputChange,
       }}
     >
       {children}

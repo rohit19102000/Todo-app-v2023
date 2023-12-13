@@ -7,21 +7,38 @@ import UserName from './components/UserName';
 
 import { TodoProvider } from './TodoContext';
 
-
+import { auth } from './config/firebase'
+import { useEffect, useState } from 'react';
 
 
 function App() {
 
+
+  const [userAuthenticated, setUserAuthenticated] =useState(false);
+
+  useEffect(() => {
+    const unsubscribe = auth.onAuthStateChanged((user) => {
+      setUserAuthenticated(!!user); 
+    });
+
+    return () => unsubscribe();
+  }, []);
   return (
     <TodoProvider>
 
-      {/* <div> */}
       <NavBar  />
-
-      <UserName/>
+      {
+      userAuthenticated? (
+        <>
+        <UserName/>
         <InputField />
         <TodoList />
-      {/* </div> */}
+        </>
+      ) :
+      <h1>
+        please sign in to continue
+      </h1>
+      }
     </TodoProvider>
   );
 }

@@ -9,7 +9,6 @@
 body {
   margin: 0;
   display: flex;
-  /* place-items: center; */
   min-width: 320px;
   min-height: 100vh;
 }
@@ -40,10 +39,7 @@ body {
   justify-content: space-around;
   font-size: 30px;
   border-radius: 25px;
-  -webkit-border-radius:;
-  -moz-border-radius:;
-  -ms-border-radius:;
-  -o-border-radius:;
+  
 }
 .inputContainer{
   margin-bottom: 5rem;
@@ -53,11 +49,7 @@ body {
   padding: 15px;
   width: 35vw;
   border-color: rgb(3, 138, 206);
-  -webkit-border-radius:;
-  border-width:3.5px ;
-  -moz-border-radius:;
-  -ms-border-radius:;
-  -o-border-radius:;
+ 
   margin-right: 15px;
 }
 .todoCard strong{
@@ -80,10 +72,7 @@ button {
   -moz-transition: border-color 0.25s;
   -ms-transition: border-color 0.25s;
   -o-transition: border-color 0.25s;
-  -webkit-border-radius:;
-  -moz-border-radius:;
-  -ms-border-radius:;
-  -o-border-radius:;
+ 
 }
 button:hover{
   scale: 1.1;
@@ -181,6 +170,7 @@ width: 250px;
   display: flex;
   justify-content: space-between;
   align-items: center;
+ 
   padding: 1rem;
   background-color: #333; 
   color: #fff; 
