@@ -25,8 +25,8 @@ function UserName() {
   return (
     <div>
     {auth?.currentUser?
-    <h3>hello {userName?.split(' ')[0]}  v3 started |  firestore implementation</h3> :
-     <h3>v3 started| firestore implementation</h3>
+    <h3>hello {userName?.split(' ')[0]} </h3> :
+     <h3>hello please log in </h3>
      }
      </div>
   )
